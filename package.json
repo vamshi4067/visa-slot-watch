@@ -1,0 +1,16 @@
+{
+  "name": "visa-slot-watch",
+  "version": "0.8.7",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check": "node scripts/check.mjs"
+  },
+  "devDependencies": {
+    "linkedom": "^0.18.13"
+  },
+  "engines": {
+    "node": ">=20.12.0"
+  }
+}

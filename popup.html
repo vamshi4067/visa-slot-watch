@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Visa Slot Watch</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <header><div class="brand"><span class="mark">V</span><div><h1>Visa Slot Watch</h1><p>HYDERABAD FIRST · LOCAL MONITOR</p></div></div><span id="badge" class="badge">Paused</span></header>
+  <main>
+    <section id="slot-alert" class="slot-alert" role="status" aria-live="polite" hidden>
+      <span class="slot-eyebrow">● SLOTS AVAILABLE</span>
+      <h2 id="slot-message"></h2><p id="slot-observed" class="slot-observed"></p>
+      <p>Availability may have changed. Open the calendar to verify. No appointment booked.</p>
+      <div class="actions"><button type="button" id="slot-open" class="primary">Review calendar ↗</button><button type="button" id="slot-ack" class="secondary">Acknowledge</button></div>
+    </section>
+    <section class="hero"><span class="eyebrow">YOUR APPOINTMENT LOOKOUT</span><h2 id="headline">Keep an eye on your next opening.</h2><p id="reason">Attach the calendar tab you logged into. You stay in control of every appointment.</p><div class="times"><div><span>Last observation</span><strong id="last">Not checked</strong></div><div><span>Next check</span><strong id="next">Not scheduled</strong></div></div></section>
+    <div id="error" class="error" role="alert" hidden></div>
+    <section class="setup"><div class="section-heading"><h3>Monitoring</h3><span id="attachment">No tab attached</span></div>
+      <button type="button" id="attach" class="secondary wide">Attach this calendar tab</button>
+      <div class="settings"><label>Locations<select id="scope"><option value="all">All VACs · Hyderabad first</option><option value="hyd">Hyderabad only</option></select></label><label>Sweep interval<select id="interval"><option value="2">2 minutes</option><option value="5">5 minutes</option><option value="10">10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 hour</option></select></label></div>
+      <p class="hint">Each sweep visits all listed VACs, starting with Hyderabad. At least 30 seconds between locations. Sweeps never overlap; a longer sweep delays the next. Chrome and your Mac must stay awake. Refreshing does not guarantee login stays valid.</p>
+      <label>Latest appointment date (optional) <input id="latest-date" type="date"></label>
+      <p class="hint">Slot alerts include dates on or before this date. Leave blank to alert for any date.</p>
+      <p id="progress" class="hint">No sweep started.</p>
+      <label class="check-option"><input type="checkbox" id="notify-empty" checked> Desktop alert when a check finds no slots</label>
+      <p class="hint">A desktop summary appears after every complete sweep. This option adds a separate alert for each no-slots result. Email and desktop summaries are separate. WhatsApp Web may leave a report in the composer for you to send.</p>
+      <div class="actions"><button type="button" id="start" class="primary">Start monitoring</button><button type="button" id="stop" class="secondary">Pause</button></div>
+    </section>
+    <section class="sound-settings"><div class="section-heading"><h3>Slot alert sound</h3></div>
+      <label class="check-option"><input type="checkbox" id="slot-muted"> Mute slot voice alerts</label>
+      <button type="button" id="slot-sound-test" class="secondary">Test slot voice</button>
+      <button type="button" id="verification-sound-test" class="secondary">Test verification voice</button>
+      <p id="slot-sound-status" class="hint" role="status">Voice alerts announce new dates and locations or ask you to complete human verification. System volume and Focus settings may affect alerts.</p>
+    </section>
+    <section><div class="section-heading"><h3>Location observations</h3><span>Rendered dates only</span></div><div id="locations" class="locations"><p class="hint">Attach the OFC calendar to discover locations.</p></div></section>
+    <section>
+      <div class="section-heading"><h3>Overnight recap</h3><span>Last 12 hours</span></div>
+      <p id="overnight-recap" class="hint"></p>
+    </section>
+    <section class="email-setup"><div class="section-heading"><h3>Email reports</h3><span id="email-status">Not configured</span></div>
+      <p class="hint">One Gmail report after each completed sweep, including all-empty sweeps. Uses send-only access; the extension never reads your inbox.</p>
+      <label class="check-option"><input type="checkbox" id="email-enabled"> Send sweep summaries by email</label>
+      <label>Recipient email<input id="email-recipient" type="email" autocomplete="email"></label>
+      <p class="hint">Google sign-in uses the account that sends the message. You can test delivery, then check your inbox manually.</p>
+      <div class="actions"><button type="button" id="email-save" class="secondary">Save email settings</button><button type="button" id="email-connect" class="secondary">Connect Google</button></div>
+      <button type="button" id="email-test" class="secondary wide email-test">Send test email</button>
+      <p id="email-result" class="hint" role="status" aria-live="polite"></p>
+    </section>
+    <section class="whatsapp-setup"><div class="section-heading"><h3>WhatsApp reports</h3><span id="whatsapp-status">Not configured</span></div>
+      <p class="hint">Use a dedicated, logged-in WhatsApp Web tab open to your recipient. No paid provider or local server.</p>
+      <label class="check-option"><input type="checkbox" id="whatsapp-enabled"> Send through my WhatsApp Web session</label>
+      <label>Recipient with country code<input id="whatsapp-number" type="tel" autocomplete="off" placeholder="+1 followed by your US number"></label>
+      <p class="hint">Open the target chat before saving. The sender checks recipient metadata and compose controls only. It does not read chat history or overwrite existing drafts. You confirm receipt of tests.</p>
+      <div class="actions"><button type="button" id="whatsapp-save" class="secondary">Verify & attach WhatsApp tab</button><button type="button" id="whatsapp-test" class="secondary">Send test</button></div>
+      <label class="check-option"><input type="checkbox" id="wa-slots" checked> Matching slots</label>
+      <label class="check-option"><input type="checkbox" id="wa-verification" checked> Human verification needed</label>
+      <label class="check-option"><input type="checkbox" id="wa-sweep" checked> Sweep summaries</label>
+      <button type="button" id="wa-alert-save" class="secondary">Save WhatsApp alert choices</button>
+      <button type="button" id="whatsapp-unlock" class="secondary wide" hidden>I checked receipt manually · clear interrupted-send lock</button>
+      <p id="whatsapp-result" class="hint" role="status"></p>
+    </section>
+    <section class="validation"><strong>Live validation incomplete</strong><p>Hyderabad’s “No Slots Available” state was observed. Available-date detection and automatic location switching are experimental until verified live. A blank page is always unknown.</p></section>
+    <div class="links"><button type="button" id="open" class="text-button">Open visa calendar ↗</button><button type="button" id="test" class="text-button">Test desktop alert</button></div><p id="permission" class="hint"></p>
+  </main><footer>Notification only. Manual login, CAPTCHA and booking.<br>No visa credentials stored. Optional WhatsApp sends location/date reports only. <span id="build-version"></span></footer>
+  <script type="module" src="popup.js"></script>
+</body></html>

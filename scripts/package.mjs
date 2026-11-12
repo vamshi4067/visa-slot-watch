@@ -1,0 +1,18 @@
+import {mkdirSync,copyFileSync,rmSync,cpSync} from 'node:fs';
+import path from 'node:path';
+import {execFileSync} from 'node:child_process';
+const root=path.resolve(import.meta.dirname,'..'),dist=path.join(root,'dist'),folder=path.join(dist,'visa-slot-watch');
+rmSync(folder,{recursive:true,force:true});
+mkdirSync(folder,{recursive:true});
+const files=['manifest.json','core.js','adapter.js','controller.js','background.js','page-observer.js','detector.js','portal-alert.js','portal-bridge.js','recovery.js','recovery-policy.js','slot-alerts.js','voice-alert.js','popup-state.js','email.js','whatsapp-client.js','whatsapp-web.js','popup.html','popup.css','popup.js','icon.png','README.md','WHATSAPP-SETUP.md'];
+for(const file of files)copyFileSync(path.join(root,file),path.join(folder,file));
+const archive=path.join(dist,'visa-slot-watch.zip');rmSync(archive,{force:true});
+execFileSync('zip',['-q','-r',archive,'visa-slot-watch'],{cwd:dist});
+console.log(archive);
+const appFolder=path.join(dist,'visa-slot-watch-app');
+rmSync(appFolder,{recursive:true,force:true});mkdirSync(appFolder,{recursive:true});
+for(const file of [...files,'package.json','package-lock.json'])copyFileSync(path.join(root,file),path.join(appFolder,file));
+for(const name of ['scripts','tests'])cpSync(path.join(root,name),path.join(appFolder,name),{recursive:true,filter:source=>path.basename(source)!=='.env'});
+const appArchive=path.join(dist,'visa-slot-watch-app.zip');rmSync(appArchive,{force:true});
+execFileSync('zip',['-q','-r',appArchive,'visa-slot-watch-app'],{cwd:dist});
+console.log(appArchive);

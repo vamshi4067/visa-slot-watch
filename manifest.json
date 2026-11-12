@@ -1,0 +1,95 @@
+{
+  "manifest_version": 3,
+  "name": "Visa Slot Watch",
+  "version": "0.8.7",
+  "description": "Local notification-only OFC calendar monitor. Hyderabad first; manual login and booking.",
+  "minimum_chrome_version": "120",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "scripting",
+    "activeTab",
+    "identity",
+    "tts"
+  ],
+  "host_permissions": [
+    "https://www.usvisascheduling.com/*",
+    "https://usvisascheduling.com/*",
+    "https://gmail.googleapis.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://web.whatsapp.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Visa Slot Watch"
+  },
+  "icons": {
+    "128": "icon.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "adapter.js",
+        "core.js",
+        "recovery.js",
+        "recovery-policy.js"
+      ],
+      "matches": [
+        "https://www.usvisascheduling.com/*",
+        "https://usvisascheduling.com/*"
+      ]
+    },
+    {
+      "resources": [
+        "whatsapp-web.js"
+      ],
+      "matches": [
+        "https://web.whatsapp.com/*"
+      ]
+    }
+  ],
+  "oauth2": {
+    "client_id": "YOUR_CHROME_EXTENSION_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.send"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.usvisascheduling.com/en-US/ofc-schedule/*",
+        "https://usvisascheduling.com/en-US/ofc-schedule/*",
+        "https://www.usvisascheduling.com/en-US/ofc-schedule",
+        "https://usvisascheduling.com/en-US/ofc-schedule"
+      ],
+      "js": [
+        "portal-alert.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://www.usvisascheduling.com/en-US/ofc-schedule/*",
+        "https://usvisascheduling.com/en-US/ofc-schedule/*",
+        "https://www.usvisascheduling.com/en-US/ofc-schedule",
+        "https://usvisascheduling.com/en-US/ofc-schedule",
+        "https://www.usvisascheduling.com/en-US/",
+        "https://usvisascheduling.com/en-US/",
+        "https://www.usvisascheduling.com/en-US",
+        "https://usvisascheduling.com/en-US"
+      ],
+      "js": [
+        "portal-bridge.js"
+      ],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    }
+  ]
+}

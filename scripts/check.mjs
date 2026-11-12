@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {execFileSync} from 'node:child_process';
+const root=path.resolve(import.meta.dirname,'..');
+const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json')));
+const assets=[...(manifest.content_scripts||[]).flatMap(script=>script.js||[]),manifest.background.service_worker,manifest.action.default_popup,...Object.values(manifest.icons),...manifest.web_accessible_resources.flatMap(r=>r.resources),'popup.js','popup-state.js','popup.css','controller.js','page-observer.js','detector.js','slot-alerts.js','voice-alert.js','email.js','whatsapp-client.js'];
+for(const file of new Set(assets))if(!fs.existsSync(path.join(root,file)))throw Error(`Missing extension asset: ${file}`);
+for(const file of fs.readdirSync(root).filter(x=>x.endsWith('.js')))execFileSync(process.execPath,['--check',path.join(root,file)],{stdio:'inherit'});
+if(manifest.manifest_version!==3)throw Error('Manifest V3 required');
+if(!manifest.permissions.includes('identity')||!manifest.host_permissions.includes('https://gmail.googleapis.com/*'))throw Error('Gmail Identity/API permissions are missing');
+if(JSON.stringify(manifest.oauth2?.scopes)!==JSON.stringify(['https://www.googleapis.com/auth/gmail.send']))throw Error('Gmail send-only OAuth scope required');
+const icon=fs.readFileSync(path.join(root,'icon.png'));
+if(icon.readUInt32BE(16)!==128||icon.readUInt32BE(20)!==128)throw Error('Icon must be 128×128 PNG');
+console.log(`Checked ${new Set(assets).size} extension assets, manifest, icon and JavaScript syntax.`);
